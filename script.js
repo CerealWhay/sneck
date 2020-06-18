@@ -88,8 +88,8 @@ var app = new Vue({
             this.foodY = Math.floor(Math.random() * this.cellHeight);
         },
         newSnake() {
-            dir = 1;
-            snake = [];
+            this.dir = 1;
+            this.snake = [];
             for (let i = 0; i < 3; i++) {
                 this.snake.push({x: Math.floor((this.cellWidth / 2)) - i, y: Math.floor((this.cellHeight / 2))});
             }
