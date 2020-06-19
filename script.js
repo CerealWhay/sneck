@@ -15,6 +15,9 @@ var app = new Vue({
         dirChange: false,
         foodX: 0,
         foodY: 0,
+
+        counter: 0,
+        highScore: 0,
  
     }, 
     computed: {
@@ -45,11 +48,14 @@ var app = new Vue({
             let dx = this.snake[0].x;
             let dy = this.snake[0].y;
             this.vueCanvas.fillStyle = '#07c155';
+            // if snake eats food
             if(dx == this.foodX && dy == this.foodY) {
                 this.newFood();
                 this.snake.push({x: this.snake[this.snake.length - 1].x, y: this.snake[this.snake.length - 1].y});
+                this.counter ++;
             }
 
+            //painting snake
             for (let i = 0; i < this.snake.length; i++) {
                 let x = this.snake[i].x;
                 let y = this.snake[i].y;
@@ -79,13 +85,24 @@ var app = new Vue({
 		        if(this.snake[0].x == this.snake[i].x && this.snake[0].y == this.snake[i].y) {
                     this.newFood();
                     this.newSnake();
+                    if (this.counter > this.highScore) this.highScore = this.counter;
+                    this.counter = 0;
 		        }
             }
-            this.dirChanged = false;
+            this.dirChange = false;
         },
         newFood() {
-            this.foodX = Math.floor(Math.random() * this.cellWidth);
-            this.foodY = Math.floor(Math.random() * this.cellHeight);
+            let valid = true;
+            do {
+                this.foodX = Math.floor(Math.random() * this.cellWidth);
+                this.foodY = Math.floor(Math.random() * this.cellHeight);
+                valid = true;
+                for (let i = 0; i < this.snake.length; i++) {
+                    if(this.foodX == this.snake[i].x && this.foodY == this.snake[i].y) {
+                        valid = false;
+                    }
+                }
+            } while(!valid);
         },
         newSnake() {
             this.dir = 1;
@@ -114,7 +131,7 @@ var app = new Vue({
           if(newDir == -1) return;
             if(((this.dir + 2) % 4) != newDir) {
                 this.dir = newDir;
-                this.dirChanged = true;
+                this.dirChange = true;
             }
         },
     },
