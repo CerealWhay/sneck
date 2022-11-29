@@ -2,11 +2,12 @@ var app = new Vue({
     el: '#app',
     data: {
         vueCanvas: null,
+        mainInterval: null,
 
-        sizeW: 804,
-        sizeH: 404,
-        // sizeW: window.innerWidth,
-        // sizeH: window.innerHeight,
+        // sizeW: 804,
+        // sizeH: 404,
+        sizeW: window.innerWidth,
+        sizeH: window.innerHeight - 100,
         cellSize: 50,
         border: 4,
 
@@ -18,6 +19,8 @@ var app = new Vue({
 
         counter: 0,
         highScore: 0,
+
+        framerate: 300
  
     }, 
     computed: {
@@ -53,6 +56,11 @@ var app = new Vue({
                 this.newFood();
                 this.snake.push({x: this.snake[this.snake.length - 1].x, y: this.snake[this.snake.length - 1].y});
                 this.counter ++;
+                console.log(this.snake);
+
+                this.increaseFramerate()
+                clearInterval(this.mainInterval);
+                this.mainInterval = setInterval(this.update, this.framerate);
             }
 
             //painting snake
@@ -134,13 +142,16 @@ var app = new Vue({
                 this.dirChange = true;
             }
         },
+        increaseFramerate() {
+            this.framerate -= 100;
+        }
     },
     mounted() {
         var c = document.getElementById("canvas");
         var ctx = c.getContext("2d");
         this.vueCanvas = ctx;
         this.newSnake();
-        setInterval(this.update, 250);
+        this.mainInterval = setInterval(this.update, this.framerate);
         document.onkeydown = this.keyDown;
     }
 })
